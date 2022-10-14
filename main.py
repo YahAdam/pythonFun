@@ -12,11 +12,27 @@ def pickOption():
     selected = random.choice(lines)
     return picked.configure(text=selected)
 
-def addOption():
+def addOption(input):
     file_object = open(filename, 'a')
-    addedOption = txt.get()
-    file_object.write("\n" + addedOption)
+    if input == "":
+            errorLabel.configure(text="Please enter something")
+            file_object.close()
+    file_object.write("\n" + input)
     file_object.close()
+
+def openNewWindow(): 
+    addOptionWindow = Toplevel(window)
+    addOptionWindow.title("Add Dinner Options")
+    addOptionWindow.geometry("200x200")
+    txt = Entry(addOptionWindow,width=20)
+    addLabel = Label(addOptionWindow, text="Enter a new dinner option")
+    errorLabel = Label(addOptionWindow)
+    addOptionButton = Button(addOptionWindow, text="Add Option", command=addOption(txt.get()))
+
+    txt.grid(column=1, row =1)
+    addLabel.grid(column=1, row=0)
+    addOptionButton.grid(column=2, row=1)
+    errorLabel.grid(column= 1, row=3)
      
 window.geometry('350x200')
 
@@ -27,14 +43,13 @@ btn = Button(window, text="What's for dinner fam?", command=pickOption)
 picked = Label(window)
 
 #add options
-txt = Entry(window,width=20)
-addLabel = Label(window, text="Enter a new dinner option")
-addOptionButton = Button(window, text="Add Option", command=addOption)
+
+
+openAddWindow = Button(window, text="Add more dinner options", command=openNewWindow)
 
 btn.grid(column=1, row=3)
 picked.grid(column=2,row=11)
-txt.grid(column=1, row =9)
-addLabel.grid(column=1, row=8)
-addOptionButton.grid(column=2, row=9)
+
+openAddWindow.grid(column=2, row=12)
 
 window.mainloop()
