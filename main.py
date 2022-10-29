@@ -1,6 +1,7 @@
 from tkinter import *
 import random
 import os
+from tkinter.ttk import *
 
 window = Tk()
 
@@ -15,23 +16,26 @@ def pickOption():
 
 def openNewWindow(): 
     def addOption(input):
-        file_object = open(filename, 'a')
-        if input == "":
-            errorLabel.configure(text="Please enter something")
-            file_object.close()
-        else:
-            addedLabel.configure(text=f'{input} has been added to the list!')
-            file_object.write("\n" + input)
-            file_object.close()
+        items = open(filename).read().splitlines()
+        lowerItems = map(lambda x: x.lower(), items)
+        with open(filename, "a") as my_file:
+            if input == "":
+                errorLabel.configure(text="Please enter something")
+            elif input.lower() in lowerItems:
+                errorLabel.configure(text=f'{input} is already in the list, try another')
+            else:        
+                addedLabel.configure(text=f'{input} has been added to the list!')
+                my_file.write("\n" + input)
 
     addOptionWindow = Toplevel(window)
     addOptionWindow.title("Add Dinner Options")
-    addOptionWindow.geometry("200x200")
+    addOptionWindow.geometry('350x200')
+    
     txt = Entry(addOptionWindow,width=20)
     addLabel = Label(addOptionWindow, text="Enter a new dinner option")
     errorLabel = Label(addOptionWindow)
     addedLabel = Label(addOptionWindow)
-    addOptionButton = Button(addOptionWindow, text="Add Option", command=addOption(txt.get()))
+    addOptionButton = Button(addOptionWindow, text="Add Option", command= lambda: addOption(txt.get()))
 
     txt.grid(column=1, row =1)
     addLabel.grid(column=1, row=0)
@@ -40,19 +44,16 @@ def openNewWindow():
     addedLabel.grid(column= 1, row=3)
      
 window.geometry('350x200')
-
 window.title("Dinner Picker")
 
-btn = Button(window, text="What's for dinner?", command=pickOption)
-
+btn = Button(window, text="What's for dinner?", style = 'W.TButton', command=pickOption)
 picked = Label(window)
-
-#add options
 openAddWindow = Button(window, text="Add more dinner options", command=openNewWindow)
+style = Style()
+style.configure('W.TButton', font =('calibri', 10, 'bold', 'underline'),foreground = 'red')
 
 btn.grid(column=1, row=3)
 picked.grid(column=2,row=11)
-
 openAddWindow.grid(column=2, row=12)
 
 window.mainloop()
