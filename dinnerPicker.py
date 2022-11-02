@@ -1,7 +1,6 @@
 from tkinter import *
 import random
 import os
-from tkinter.ttk import *
 
 window = Tk()
 
@@ -12,7 +11,6 @@ def pickOption():
     lines = open(filename).read().splitlines()
     selected = random.choice(lines)
     return picked.configure(text = selected)
-
 
 def openNewWindow(): 
     def addOption(input):
@@ -27,6 +25,9 @@ def openNewWindow():
                 addedLabel.configure(text=f'{input} has been added to the list!')
                 my_file.write("\n" + input)
 
+    def closeWindow():
+        addOptionWindow.destroy()
+
     addOptionWindow = Toplevel(window)
     addOptionWindow.title("Add Dinner Options")
     addOptionWindow.geometry('350x200')
@@ -36,21 +37,21 @@ def openNewWindow():
     errorLabel = Label(addOptionWindow)
     addedLabel = Label(addOptionWindow)
     addOptionButton = Button(addOptionWindow, text="Add Option", command= lambda: addOption(txt.get()))
+    closeButton = Button(addOptionWindow, text="Close", command= lambda: closeWindow())
 
     txt.grid(column=1, row =1)
     addLabel.grid(column=1, row=0)
     addOptionButton.grid(column=2, row=1)
+    closeButton.grid(column=4,row=5)
     errorLabel.grid(column= 1, row=3)
     addedLabel.grid(column= 1, row=3)
      
 window.geometry('350x200')
 window.title("Dinner Picker")
 
-btn = Button(window, text="What's for dinner?", style = 'W.TButton', command=pickOption)
+btn = Button(window, text="What's for dinner?", command=pickOption)
 picked = Label(window)
 openAddWindow = Button(window, text="Add more dinner options", command=openNewWindow)
-style = Style()
-style.configure('W.TButton', font =('calibri', 10, 'bold', 'underline'),foreground = 'red')
 
 btn.grid(column=1, row=3)
 picked.grid(column=2,row=11)
